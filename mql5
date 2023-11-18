@@ -1,0 +1,85 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                                  Catacombo MT4  |
+//|                              Developed by Forex Robot Easy Team  |
+//|                                            forexroboteasy.com  |
+//+------------------------------------------------------------------+
+#property strict
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|              Expert Advisor Input Parameters                     |
+//|                                                                  |
+//+------------------------------------------------------------------+
+extern int TakeProfit = 100;     // Take profit in pips
+extern int StopLoss = 50;        // Stop loss in pips
+extern int IndicatorPeriod = 14; // Period for indicator calculation
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|              Expert Advisor Initialization Function              |
+//|                                                                  |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+    // Add initialization code here
+    return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|              Expert Advisor Start Function                        |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Add trading logic here
+    double bid = SymbolInfoDouble(_Symbol, SYMBOL_BID);
+    double ask = SymbolInfoDouble(_Symbol, SYMBOL_ASK);
+
+    double stopLossPrice = bid - StopLoss * Point;
+    double takeProfitPrice = ask + TakeProfit * Point;
+
+    // Place a buy trade
+    int ticket = OrderSend(_Symbol, OP_BUY, 0.1, ask, 0, stopLossPrice, takeProfitPrice, 'Buy Trade', 0, 0, Green);
+
+    if (ticket > 0)
+    {
+        Print('Buy trade placed successfully');
+    }
+    else
+    {
+        Print('Error placing buy trade:', GetLastError());
+    }
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|              Expert Advisor Deinitialization Function            |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+    // Add deinitialization code here
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|              Expert Advisor Error Handling Function              |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnTradeError(const string operation, const int result)
+{
+    // Handle trade errors here
+    Print('Trade error:', operation, 'Result:', result);
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|              Expert Advisor Stop Function                         |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnStop()
+{
+    // Add stop code here
+}
